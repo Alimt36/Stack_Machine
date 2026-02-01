@@ -4,6 +4,7 @@ module state(clk,reset,run,cont,halt,cs);
   
   input clk, reset, run, cont, halt;
   output[2:0]cs;
+
   reg[2:0]cs;
 
   always @(posedge clk or negedge reset)
@@ -11,7 +12,7 @@ module state(clk,reset,run,cont,halt,cs);
     else
       case(cs)
         `IDLE: if(run) cs <= `FETCHA;
-        `FETCHB: cs <= `FETCHB;
+        `FETCHA: cs <= `FETCHB;
         `FETCHB: cs <= `EXECA;
         `EXECA: if(halt) cs <= `IDLE;
                 else if(cont) cs <= `EXECB;

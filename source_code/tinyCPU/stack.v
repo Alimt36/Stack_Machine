@@ -24,5 +24,4 @@ module stack(clk, reset, load, push, pop, d, qtop, qnext);
   always @(posedge clk or negedge reset)
     if(!reset) q[N-1] <= 0;
     else if(push) q[N-1] <= q[N-2];
-
 endmodule

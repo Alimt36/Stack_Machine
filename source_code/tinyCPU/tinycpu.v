@@ -10,29 +10,31 @@ module tinycpu(clk, reset, run, in, cs, pcout, irout, qtop, abus, dbus, out);
 
   input clk,reset,run;
   input[15:0] in;
+  
   output[2:0]cs;
   output [15:0] irout, qtop, dbus, out;
   output[11:0] pcout, abus;
+
   wire [15:0] qnext, ramout, aluout;
   reg[11:0] abus;
   reg halt, cont, pcinc, push, pop, abus2pc, dbus2ir, dbus2qtop, dbus2ram,
       dbus2obuf, pc2abus, ir2abus, ir2dbus, qtop2dbus, alu2dbus, ram2dbus,
       in2dbus;
 
-  counter #(12) pc0(.clk(clk), .reset(reset), .load(abus2pc), .inc(pcinc),
-                    .d(abus), .q(pcout));
-  counter #(16) ir0(.clk(clk), .reset(reset), .load(dbus2ir), .inc(0),
-                   .d(dbus), .q(irout));
-  state state0(.clk(clk), .reset(reset), .run(run), .cont(cont),
-               .halt(halt), .cs(cs));
-  stack stack0(.clk(clk), .reset(reset), .load(dbus2qtop), .push(push),
-               .pop(pop), .d(dbus), .qtop(qtop), .qnext(qnext));
+  counter #(12) pc0(.clk(clk), .reset(reset), .load(abus2pc), .inc(pcinc), .d(abus), .q(pcout));
+
+  counter #(16) ir0(.clk(clk), .reset(reset), .load(dbus2ir), .inc(0), .d(dbus), .q(irout));
+
+  state state0(.clk(clk), .reset(reset), .run(run), .cont(cont), .halt(halt), .cs(cs));
+
+  stack stack0(.clk(clk), .reset(reset), .load(dbus2qtop), .push(push), .pop(pop), .d(dbus), .qtop(qtop), .qnext(qnext));
+
   alu alu0(.a(qtop), .b(qnext), .f(irout[4:0]), .s(aluout));
-  ram #(16,12,4096) ram0(.clk(clk), .load(dbus2ram), .addr(abus[11:0]),
-                         .d(dbus), .q(ramout));
-  counter #(16) obuf0(.clk(clk), .reset(reset), .load(dbus2obuf), .inc(0),
-                      .d(dbus), .q(out));
+
+  ram #(16,12,4096) ram0(.clk(clk), .load(dbus2ram), .addr(abus[11:0]), .d(dbus), .q(ramout));
   
+  counter #(16) obuf0(.clk(clk), .reset(reset), .load(dbus2obuf), .inc(0), .d(dbus), .q(out));
+
   always @(pc2abus or ir2abus or pcout or irout)
     if(pc2abus) abus <= pcout;
     else if(ir2abus) abus <= irout[11:0];
