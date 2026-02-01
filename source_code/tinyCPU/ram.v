@@ -14,11 +14,11 @@ module ram(clk, load, addr, d, q);
      q <= mem[addr];
    end
 
- integer i;
- initial begin
-    for(i=0;i<WORDS;i=i+1)
-       mem[i]=0;
- // Write memory initialization here (e.g., mem[12'h001]=16'h1234;).
- end
+//  integer i;
+//  initial begin
+//     for(i=0;i<WORDS;i=i+1)
+//        mem[i]=0;
+//// Write memory initialization here (e.g., mem[12'h001]=16'h1234;).
+//  end
 
 endmodule
