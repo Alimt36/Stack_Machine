@@ -131,13 +131,15 @@ def out_handler( line ) :
     for _ in range ( 0 , len(line)) : 
         if line[_] == '(' : temp1 = _
         elif line[_] == ')' : temp2 = _
-
+        
+    temp = line[temp1+1:temp2]
+    temp = temp.strip()
     try:
-        x = int(line[temp1+1:temp2])
-        print_and_add2list(f"PUSHI {line[temp1+1:temp2]}")
+        x = int(temp)
+        print_and_add2list(f"PUSHI {x}")
         print_and_add2list("OUT")
     except:
-        print_and_add2list(f"PUSH {line[temp1+1:temp2]}")
+        print_and_add2list(f"PUSH {temp}")
         print_and_add2list("OUT")
 
     # print(f"temp1 : {temp1}")
@@ -147,6 +149,37 @@ def out_handler( line ) :
 #---------------------------------------------------------------------------------------------------------------------------
 # if handling
 #---------------------------------------------------------------------------------------------------------------------------
+
+def split_statements_safely(s: str):
+    stmts = []
+    cur = []
+    brace = 0
+    paren = 0
+
+    for ch in s:
+        if ch == '{':
+            brace += 1
+        elif ch == '}':
+            brace -= 1
+        elif ch == '(':
+            paren += 1
+        elif ch == ')':
+            paren -= 1
+
+        if ch == ';' and brace == 0 and paren == 0:
+            stmt = ''.join(cur).strip()
+            if stmt:
+                stmts.append(stmt)
+            cur = []
+        else:
+            cur.append(ch)
+
+    tail = ''.join(cur).strip()
+    if tail:
+        stmts.append(tail)
+
+    return stmts
+
 
 # One-line if handler (no else)
 def handle_one_line_if(condition, body):
@@ -167,20 +200,41 @@ def handle_one_line_if(condition, body):
     
     print_and_add2list(f"_{label_num:03d}F:")
 
-# One-line if-else handler
+
 def handle_one_line_if_else(condition, if_body, else_body):
     label_num = generate_label()
 
     parse_condition(condition)
     print_and_add2list(f"JZ _{label_num:03d}F")
 
-    parse_statement(if_body)
+    # Handle if_body - strip braces and split by ;
+    if_body = if_body.strip()
+    if if_body.startswith('{') and if_body.endswith('}'):
+        if_body = if_body[1:-1].strip()
+        statements = if_body.split(';')
+        for stmt in statements:
+            stmt = stmt.strip()
+            if stmt:
+                parse_statement(stmt)
+    else:
+        parse_statement(if_body)
+
     print_and_add2list(f"JMP _{label_num:03d}T")
     print_and_add2list(f"_{label_num:03d}F:")
 
-    parse_statement(else_body)
-    print_and_add2list(f"_{label_num:03d}T:")
+    # Handle else_body - strip braces and split by ;
+    else_body = else_body.strip()
+    if else_body.startswith('{') and else_body.endswith('}'):
+        else_body = else_body[1:-1].strip()
+        statements = else_body.split(';')
+        for stmt in statements:
+            stmt = stmt.strip()
+            if stmt:
+                parse_statement(stmt)
+    else:
+        parse_statement(else_body)
 
+    print_and_add2list(f"_{label_num:03d}T:")
 
 # Parse condition - extracts left, operator, right and generates comparison code
 def parse_condition(condition):
@@ -213,13 +267,39 @@ def parse_condition(condition):
     print("Error: No comparison operator found in condition")
 
 # Parse a single statement (for if/else bodies)
+# def parse_statement(stmt):
+#     stmt = stmt.strip()
+    
+#     if stmt.startswith("out("):
+#         out_handler(stmt)
+#     elif stmt.startswith("halt"):
+#         halt_handler(stmt)
+#     elif '=' in stmt:
+#         stmt = stmt.rstrip(';').strip()
+#         parts = stmt.split()
+        
+#         if len(parts) == 3:
+#             save_value_by_variable(parts[0], parts[2])
+#         elif len(parts) == 5:
+#             math_operation(f"{parts[2]} {parts[3]} {parts[4]}")
+#             save_value(parts[0], None)
+#         else:
+#             print(f"// Error: unexpected assignment format ({len(parts)} parts): {stmt}")
+#             print(f"// Parts: {parts}")
+#     else:
+#         print(f"// Unknown statement: {stmt}")
 def parse_statement(stmt):
     stmt = stmt.strip()
     
     if stmt.startswith("out("):
         out_handler(stmt)
+    
     elif stmt.startswith("halt"):
         halt_handler(stmt)
+    
+    elif stmt.startswith("if"):
+        if_handler(stmt)
+    
     elif '=' in stmt:
         stmt = stmt.rstrip(';').strip()
         parts = stmt.split()
@@ -232,8 +312,10 @@ def parse_statement(stmt):
         else:
             print(f"// Error: unexpected assignment format ({len(parts)} parts): {stmt}")
             print(f"// Parts: {parts}")
+    
     else:
         print(f"// Unknown statement: {stmt}")
+
 
 # Label generator 
 def generate_label():
@@ -243,7 +325,7 @@ def generate_label():
 
 # if dispacher : 
 def if_handler( line ) :
-    if '{' not in line:
+    # if '{' not in line:
         if 'else' in line:
             match = regex.match(r'if\s*\((.*?)\)\s*(.*?)\s*else\s*(.*)', line)
             if match:
@@ -257,8 +339,8 @@ def if_handler( line ) :
                 condition = match.group(1)
                 body = match.group(2)
                 handle_one_line_if(condition, body)
-    else:
-        print("// Multi-line if not supported yet")
+    # else:
+    #     print("// Multi-line if not supported yet")
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
@@ -288,7 +370,8 @@ def handle_one_line_while(condition, body):
     if body.startswith('{') and body.endswith('}'):
         body = body[1:-1].strip()
 
-        statements = body.split(';')
+        # statements = body.split(';')
+        statements = split_statements_safely(body)
         
         for stmt in statements:
             stmt = stmt.strip()
