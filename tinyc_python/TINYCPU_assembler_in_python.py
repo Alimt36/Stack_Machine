@@ -1,4 +1,6 @@
 
+import os
+
 OPCODES = {
     "HALT": "0000000000000000",
 
@@ -44,6 +46,8 @@ line_counter = 0
 
 mem_counter = 0
 variables = {}
+
+list_01s = []
 #---------------------------------------------------------------------------------------------------------------------------
 # load assembly file
 #---------------------------------------------------------------------------------------------------------------------------
@@ -71,7 +75,7 @@ def label( line ) :
 
     temp = line.split(':')
 
-    # print(temp)
+    # print_and_add2list(temp)
 
     if temp[0] in labels :
         return 
@@ -115,6 +119,35 @@ def calc_variable_address ( line ) :
 
 #---------------------------------------------------------------------------------------------------------------------------
 
+#---------------------------------------------------------------------------------------------------------------------------
+#
+#---------------------------------------------------------------------------------------------------------------------------
+def print_and_add2list( text:str="\n" ) : 
+    global list_01s
+    
+    print(text)
+    list_01s.append(f"{text}\n")
+#---------------------------------------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------------------------------------
+#
+#---------------------------------------------------------------------------------------------------------------------------
+def save_0and1s_to_file( path , x) : 
+    file_source = path
+    folder_path = os.path.dirname(file_source)
+    temp = os.path.join(folder_path , "generated_0and1s.txt" )
+
+    try : 
+        with open(temp, "w") as f:
+            f.writelines(x)
+            print("-" * 100 )
+            print(f"0and1s of the assembly generated! \nPath : {temp}")
+            print("-" * 100 )
+    except : 
+            print("-" * 100 )
+            print(f"Error while generating the 0amd1s_output_file , Please try again. ")
+            print("-" * 100 )
+#---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
 # main
@@ -134,7 +167,7 @@ def main () :
             if line.startswith("POP") : 
                 calc_variable_address(line)
 
-    # print(variables)
+    # print_and_add2list(variables)
 
     line_counter = mem_counter + 1
 
@@ -142,18 +175,18 @@ def main () :
         line = line.strip() 
         if line:
             if ":" in line : 
-                # print("!")
+                # print_and_add2list("!")
                 label( line )
             else : 
                 line_counter += 1
 
     for _0   in variables : 
-        # print(int_2_binary_16bit( variables[_0] ))
-        print(int_2_binary_16bit( 0 ))
+        # print_and_add2list(int_2_binary_16bit( variables[_0] ))
+        print_and_add2list(int_2_binary_16bit( 0 ))
 
-    # print("!")
-    # print("!")
-    # print("!")
+    # print_and_add2list("!")
+    # print_and_add2list("!")
+    # print_and_add2list("!")
 
     for line in code_txt.split('\n'):
         line = line.strip() 
@@ -161,17 +194,18 @@ def main () :
             parts = line.split(' ')
             if parts[0] in opcpde_16 : 
                 # pass
-                print(f"{OPCODES[parts[0]]}")
+                print_and_add2list(f"{OPCODES[parts[0]]}")
             elif parts[0] in opcode_stack : 
                 if parts[0] == "PUSHI" : 
-                    print(f"{OPCODES[parts[0]]}{int_2_binary_12bit(int(parts[1]))}")
+                    print_and_add2list(f"{OPCODES[parts[0]]}{int_2_binary_12bit(int(parts[1]))}")
                 else : 
-                    print(f"{OPCODES[parts[0]]}{int_2_binary_12bit(variables[parts[1]])}")
+                    print_and_add2list(f"{OPCODES[parts[0]]}{int_2_binary_12bit(variables[parts[1]])}")
             elif parts[0] in opcode_j : 
-                print(f"{OPCODES[parts[0]]}{int_2_binary_12bit(labels[parts[1]])}")
+                print_and_add2list(f"{OPCODES[parts[0]]}{int_2_binary_12bit(labels[parts[1]])}")
 
 
-    # print( "\n" , labels)
+    # print_and_add2list( "\n" , labels)
+    save_0and1s_to_file( path , list_01s )
 
 main()
 #---------------------------------------------------------------------------------------------------------------------------
