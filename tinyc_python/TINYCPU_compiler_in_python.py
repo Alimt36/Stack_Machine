@@ -14,7 +14,9 @@ asm_list = []
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
-# Code file Load
+# file related functions : 
+#   load_file : gets the absolute path of the c like code reads it to a string and outputs the text and the path 
+#   save_assembly_to_file : using the directory path of the c code saves the stack assembly output to the intended file 
 #---------------------------------------------------------------------------------------------------------------------------
 def load_file () -> str : 
     path = input("Path of the code : ")
@@ -29,10 +31,29 @@ def load_file () -> str :
     print("-" * 100 )
 
     return code_txt , path
+
+def save_assembly_to_file( path , assembly_list) : 
+    file_source = path
+    folder_path = os.path.dirname(file_source)
+    assebly_output_file_path = os.path.join(folder_path , "generated_assebly.txt" )
+
+    try : 
+        with open(assebly_output_file_path, "w") as f:
+            f.writelines(assembly_list)
+            print("-" * 100 )
+            print(f"Assembly of the code generated! \nPath : {assebly_output_file_path}")
+            print("-" * 100 )
+    except : 
+            print("-" * 100 )
+            print(f"Error while generating the assebly_output_file , Please try again. ")
+            print("-" * 100 )
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
-# math operations
+# math operations : 
+#   the function can handle the operations that have only 2 operands and one operation and the operands must be separated-
+#   -from the operation 
+#       --> template : { operand0 operation operand1 }
 #---------------------------------------------------------------------------------------------------------------------------
 def math_operation ( line ) :
     parts = regex.split(r'([+\-*;])', line)
@@ -57,7 +78,12 @@ def math_operation ( line ) :
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
-# variable defenition
+# variable related functions : 
+#   save_variable : a function that saves the value with two modes: one is with value and one is without a value which in  -
+#       - that case saves 0 by default
+#   variable_definition : when a "int" is there it is called and saves the variable
+#   save_value : saves a value to a defined variable
+#   save_value_by_variable : a better function that saves a value to a variable  
 #---------------------------------------------------------------------------------------------------------------------------
 def save_variable ( i , parts , value ) :
     global Invalid_Syntax
@@ -90,11 +116,7 @@ def variable_definition( parts  ) :
                 Invalid_Syntax = 1
         except : 
             print("Invalid Syntax") 
-#---------------------------------------------------------------------------------------------------------------------------
 
-#---------------------------------------------------------------------------------------------------------------------------
-# save a value into a varible 
-#---------------------------------------------------------------------------------------------------------------------------
 def save_value( var , val=0 ) :
 
     if val != None :
@@ -122,7 +144,7 @@ def save_value_by_variable(var , val ) :
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
-# out handling
+# out handler :
 #   the out must be a single varible or a single number ! 
 #---------------------------------------------------------------------------------------------------------------------------
 def out_handler( line ) : 
@@ -141,13 +163,22 @@ def out_handler( line ) :
     except:
         print_and_add2list(f"PUSH {temp}")
         print_and_add2list("OUT")
-
-    # print(f"temp1 : {temp1}")
-    # print(f"temp2 : {temp2}")
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
-# if handling
+# if handler :
+#   split_statements_safely : splits the statements while being aware of the braces and parentheses , used when there are-
+#       -multiple statements in the body of the if or while and we need to separate them without breaking nested structures
+#   handle_one_line_if : handles if statements without else block , generates labels for jumping and processes the body-
+#       -statements whether they are in braces or single statement
+#   handle_one_line_if_else : handles if-else statements , generates two labels (F for false/else block and T for true/-
+#       -end) and processes both if and else bodies separately
+#   parse_condition : extracts the left operand , operator and right operand from the condition , generates the appropriate-
+#       -comparison code (PUSH/PUSHI for operands and comparison instruction like GT,EQ,etc)
+#   parse_statement : the main statement parser that determines the type of statement (out, halt, if, assignment) and calls-
+#       -the appropriate handler , used recursively for nested if statements inside while loops
+#   if_handler : the main if dispatcher that checks if the line contains else keyword and calls the appropriate handler-
+#       -(handle_one_line_if or handle_one_line_if_else)
 #---------------------------------------------------------------------------------------------------------------------------
 def split_statements_safely(s: str):
     stmts = []
@@ -179,8 +210,6 @@ def split_statements_safely(s: str):
 
     return stmts
 
-
-# One-line if handler
 def handle_one_line_if(condition, body):
     label_num = generate_label()
     parse_condition(condition)
@@ -206,7 +235,6 @@ def handle_one_line_if_else(condition, if_body, else_body):
     parse_condition(condition)
     print_and_add2list(f"JZ _{label_num:03d}F")
 
-    # Handle if_body - strip braces and split by ;
     if_body = if_body.strip()
     if if_body.startswith('{') and if_body.endswith('}'):
         if_body = if_body[1:-1].strip()
@@ -221,7 +249,6 @@ def handle_one_line_if_else(condition, if_body, else_body):
     print_and_add2list(f"JMP _{label_num:03d}T")
     print_and_add2list(f"_{label_num:03d}F:")
 
-    # Handle else_body - strip braces and split by ;
     else_body = else_body.strip()
     if else_body.startswith('{') and else_body.endswith('}'):
         else_body = else_body[1:-1].strip()
@@ -264,7 +291,6 @@ def parse_condition(condition):
     
     print("Error: No comparison operator found in condition")
 
-
 def parse_statement(stmt):
     stmt = stmt.strip()
     
@@ -292,8 +318,7 @@ def parse_statement(stmt):
     
     else:
         print(f"// Unknown statement: {stmt}")
-
-# if dispacher : 
+ 
 def if_handler( line ) :
     # if '{' not in line:
         if 'else' in line:
@@ -314,7 +339,8 @@ def if_handler( line ) :
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
-#
+# generate_label :
+#   generates the lablel that is needed for the various types of jumping in the stack assembly code 
 #---------------------------------------------------------------------------------------------------------------------------
 def generate_label():
     global label_counter
@@ -323,16 +349,17 @@ def generate_label():
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
-# halt handling
+# halt handler
 #---------------------------------------------------------------------------------------------------------------------------
 def halt_handler( line ) :
     print_and_add2list(f"HALT")
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
-# One-line while handler (supports multiple statements in { })
+# while : 
+#   One-line while handler that supports multiple statements in { }
 #---------------------------------------------------------------------------------------------------------------------------
-def handle_one_line_while(condition, body):
+def while_handler(condition, body):
     label_num = generate_label()
     
     print_and_add2list(f"_{label_num:03d}T:")
@@ -361,33 +388,15 @@ def handle_one_line_while(condition, body):
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
-# custom print function that prints and adds the line to the asm_list inorder for outputting  
+# print_and_add2list : 
+#   the function gets a str input appends the text to the list (asm_list) for the function (save_assembly_to_file) to be-
+#   -able to save the lines into the file and then prints the text to the terminal
 #---------------------------------------------------------------------------------------------------------------------------
 def print_and_add2list( text:str="\n" ) : 
     global asm_list
     
     print(text)
     asm_list.append(f"{text}\n")
-#---------------------------------------------------------------------------------------------------------------------------
-
-#---------------------------------------------------------------------------------------------------------------------------
-# save assembly that is generated into file
-#---------------------------------------------------------------------------------------------------------------------------
-def save_assembly_to_file( path , assembly_list) : 
-    file_source = path
-    folder_path = os.path.dirname(file_source)
-    assebly_output_file_path = os.path.join(folder_path , "generated_assebly.txt" )
-
-    try : 
-        with open(assebly_output_file_path, "w") as f:
-            f.writelines(assembly_list)
-            print("-" * 100 )
-            print(f"Assembly of the code generated! \nPath : {assebly_output_file_path}")
-            print("-" * 100 )
-    except : 
-            print("-" * 100 )
-            print(f"Error while generating the assebly_output_file , Please try again. ")
-            print("-" * 100 )
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
@@ -425,11 +434,10 @@ def main () :
                     if match:
                         condition = match.group(1)
                         body = match.group(2)
-                        handle_one_line_while(condition, body)
+                        while_handler(condition, body)
 
     global asm_list
     save_assembly_to_file( path , asm_list )
-
 
 main()
 #---------------------------------------------------------------------------------------------------------------------------

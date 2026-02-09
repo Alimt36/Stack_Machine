@@ -4,7 +4,10 @@ import os
 mac2mem_list = []
 
 #---------------------------------------------------------------------------------------------------------------------------
-#
+# file related functions : 
+#   load_file : gets the absolute path of the c like code reads it to a string and outputs the text and the path 
+#   save_mac2mem_to_file : using the directory path of the c code saves the 0and1s in the verilog format output to the-
+#    -intended file  
 #---------------------------------------------------------------------------------------------------------------------------
 def load_file () -> str : 
     path = input("Path of the code : ")
@@ -19,11 +22,7 @@ def load_file () -> str :
     print("-" * 100 )
 
     return code_txt , path
-#---------------------------------------------------------------------------------------------------------------------------
 
-#---------------------------------------------------------------------------------------------------------------------------
-#
-#---------------------------------------------------------------------------------------------------------------------------
 def save_mac2mem_to_file( path , x) : 
     file_source = path
     folder_path = os.path.dirname(file_source)
@@ -42,7 +41,9 @@ def save_mac2mem_to_file( path , x) :
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
-#
+# print_and_add2list : 
+#   the function gets a str input appends the text to the list (mac2mem_list) for the function (save_mac2mem_to_file) to be-
+#   -able to save the lines into the file and then prints the text to the terminal
 #---------------------------------------------------------------------------------------------------------------------------
 def print_and_add2list( text:str="\n" ) : 
     global mac2mem_list
@@ -52,7 +53,8 @@ def print_and_add2list( text:str="\n" ) :
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
-#
+# to_binary functions : 
+#   they get a number and turn it into binary regarding the format they are written to
 #---------------------------------------------------------------------------------------------------------------------------
 def int_2_binary_16bit ( x ) : 
     temp = bin(x)[2:]

@@ -47,8 +47,11 @@ mem_counter = 0
 variables = {}
 
 list_01s = []
+
 #---------------------------------------------------------------------------------------------------------------------------
-# load assembly file
+# file related functions : 
+#   load_file : gets the absolute path of the c like code reads it to a string and outputs the text and the path 
+#   save_0and1s_to_file : using the directory path of the c code saves the 0and1s output to the intended file 
 #---------------------------------------------------------------------------------------------------------------------------
 def load_file () -> str : 
     path = input("Path of the code : ")
@@ -63,10 +66,27 @@ def load_file () -> str :
     print("-" * 100 )
 
     return code_txt , path
+
+def save_0and1s_to_file( path , x) : 
+    file_source = path
+    folder_path = os.path.dirname(file_source)
+    temp = os.path.join(folder_path , "generated_0and1s.txt" )
+
+    try : 
+        with open(temp, "w") as f:
+            f.writelines(x)
+            print("-" * 100 )
+            print(f"0and1s of the assembly generated! \nPath : {temp}")
+            print("-" * 100 )
+    except : 
+            print("-" * 100 )
+            print(f"Error while generating the 0amd1s_output_file , Please try again. ")
+            print("-" * 100 )
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
-# lablel handler
+# generate_label :
+#   generates the lablel that is needed for the various types of jumping in the stack assembly code 
 #---------------------------------------------------------------------------------------------------------------------------
 def label( line ) :
     global labels
@@ -84,7 +104,8 @@ def label( line ) :
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
-# 
+# to_binary functions : 
+#   they get a number and turn it into binary regarding the format they are written to
 #---------------------------------------------------------------------------------------------------------------------------
 def int_2_binary_12bit ( labelnum ) : 
     temp = bin(labelnum)[2:]
@@ -102,7 +123,9 @@ def int_2_binary_16bit ( x ) :
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
-#
+# calc_variable_address : 
+#   the function is called when a "POP" is in the code and finds if the variable is difined or not and saves the memory-
+#   -address of the variable to the dictionary (variables) for future usages 
 #---------------------------------------------------------------------------------------------------------------------------
 def calc_variable_address ( line ) : 
     global variables
@@ -119,33 +142,15 @@ def calc_variable_address ( line ) :
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
-#
+# print_and_add2list : 
+#   the function gets a str input appends the text to the list (list_01s) for the function (save_0and1s_to_file) to be-
+#   -able to save the lines into the file and then prints the text to the terminal
 #---------------------------------------------------------------------------------------------------------------------------
 def print_and_add2list( text:str="\n" ) : 
     global list_01s
     
     print(text)
     list_01s.append(f"{text}\n")
-#---------------------------------------------------------------------------------------------------------------------------
-
-#---------------------------------------------------------------------------------------------------------------------------
-#
-#---------------------------------------------------------------------------------------------------------------------------
-def save_0and1s_to_file( path , x) : 
-    file_source = path
-    folder_path = os.path.dirname(file_source)
-    temp = os.path.join(folder_path , "generated_0and1s.txt" )
-
-    try : 
-        with open(temp, "w") as f:
-            f.writelines(x)
-            print("-" * 100 )
-            print(f"0and1s of the assembly generated! \nPath : {temp}")
-            print("-" * 100 )
-    except : 
-            print("-" * 100 )
-            print(f"Error while generating the 0amd1s_output_file , Please try again. ")
-            print("-" * 100 )
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
