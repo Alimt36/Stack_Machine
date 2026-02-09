@@ -149,7 +149,6 @@ def out_handler( line ) :
 #---------------------------------------------------------------------------------------------------------------------------
 # if handling
 #---------------------------------------------------------------------------------------------------------------------------
-
 def split_statements_safely(s: str):
     stmts = []
     cur = []
@@ -181,7 +180,7 @@ def split_statements_safely(s: str):
     return stmts
 
 
-# One-line if handler (no else)
+# One-line if handler
 def handle_one_line_if(condition, body):
     label_num = generate_label()
     parse_condition(condition)
@@ -236,7 +235,6 @@ def handle_one_line_if_else(condition, if_body, else_body):
 
     print_and_add2list(f"_{label_num:03d}T:")
 
-# Parse condition - extracts left, operator, right and generates comparison code
 def parse_condition(condition):
     ops = {
         '>=': 'GE', '<=': 'LE', '==': 'EQ', '!=': 'NE',
@@ -266,28 +264,7 @@ def parse_condition(condition):
     
     print("Error: No comparison operator found in condition")
 
-# Parse a single statement (for if/else bodies)
-# def parse_statement(stmt):
-#     stmt = stmt.strip()
-    
-#     if stmt.startswith("out("):
-#         out_handler(stmt)
-#     elif stmt.startswith("halt"):
-#         halt_handler(stmt)
-#     elif '=' in stmt:
-#         stmt = stmt.rstrip(';').strip()
-#         parts = stmt.split()
-        
-#         if len(parts) == 3:
-#             save_value_by_variable(parts[0], parts[2])
-#         elif len(parts) == 5:
-#             math_operation(f"{parts[2]} {parts[3]} {parts[4]}")
-#             save_value(parts[0], None)
-#         else:
-#             print(f"// Error: unexpected assignment format ({len(parts)} parts): {stmt}")
-#             print(f"// Parts: {parts}")
-#     else:
-#         print(f"// Unknown statement: {stmt}")
+
 def parse_statement(stmt):
     stmt = stmt.strip()
     
@@ -316,13 +293,6 @@ def parse_statement(stmt):
     else:
         print(f"// Unknown statement: {stmt}")
 
-
-# Label generator 
-def generate_label():
-    global label_counter
-    label_counter += 1
-    return label_counter
-
 # if dispacher : 
 def if_handler( line ) :
     # if '{' not in line:
@@ -344,6 +314,13 @@ def if_handler( line ) :
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
+#
+#---------------------------------------------------------------------------------------------------------------------------
+def generate_label():
+    global label_counter
+    label_counter += 1
+    return label_counter
+#---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
 # halt handling
@@ -351,7 +328,6 @@ def if_handler( line ) :
 def halt_handler( line ) :
     print_and_add2list(f"HALT")
 #---------------------------------------------------------------------------------------------------------------------------
-
 
 #---------------------------------------------------------------------------------------------------------------------------
 # One-line while handler (supports multiple statements in { })
@@ -415,9 +391,6 @@ def save_assembly_to_file( path , assembly_list) :
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
-# main
-#---------------------------------------------------------------------------------------------------------------------------
-
 def main () : 
 
     code_txt , path = load_file()
