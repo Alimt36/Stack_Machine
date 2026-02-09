@@ -1,8 +1,14 @@
+
 import os
 import subprocess
 import sys
 import time
 
+#---------------------------------------------------------------------------------------------------------------------------
+# run_script_with_input : 
+#   runs a python script as a subprocess and automatically provides the input path when the script prompts for it , returns-
+#   -True if successful and False if there was an error
+#---------------------------------------------------------------------------------------------------------------------------
 def run_script_with_input(script_name, input_path):
     print("-" * 100)
     print(f"Running: {script_name}")
@@ -36,7 +42,13 @@ def run_script_with_input(script_name, input_path):
         print(f"ERROR running {script_name}: {e}")
         time.sleep(2)
         return False
+#---------------------------------------------------------------------------------------------------------------------------    
 
+#---------------------------------------------------------------------------------------------------------------------------
+# main : 
+#   the build pipeline that takes a c code file path , locates the compiler/assembler/mac2mem scripts in the same folder-
+#   -and runs them in sequence to generate assembly, binary and verilog memory initialization files
+#---------------------------------------------------------------------------------------------------------------------------
 def main():
     c_code_path = input("Enter path to C code file: ").strip()
     
@@ -132,3 +144,4 @@ def main():
     time.sleep(2)
 
 main()
+#---------------------------------------------------------------------------------------------------------------------------
