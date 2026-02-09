@@ -161,15 +161,15 @@ def main () :
     global variables
     global mem_counter
 
-    for line in code_txt.split('\n'):
-        line = line.strip() 
-        if line:
-            if line.startswith("POP") : 
-                calc_variable_address(line)
+    # for line in code_txt.split('\n'):
+    #     line = line.strip() 
+    #     if line:
+    #         if line.startswith("POP") : 
+    #             calc_variable_address(line)
+    # line_counter = mem_counter 
 
     # print_and_add2list(variables)
 
-    line_counter = mem_counter + 1
 
     for line in code_txt.split('\n'):
         line = line.strip() 
@@ -180,13 +180,14 @@ def main () :
             else : 
                 line_counter += 1
 
-    for _0   in variables : 
-        # print_and_add2list(int_2_binary_16bit( variables[_0] ))
-        print_and_add2list(int_2_binary_16bit( 0 ))
 
-    # print_and_add2list("!")
-    # print_and_add2list("!")
-    # print_and_add2list("!")
+    mem_counter = line_counter
+    for line in code_txt.split('\n'):
+        line = line.strip() 
+        if line:
+            if line.startswith("POP") : 
+                calc_variable_address(line)
+
 
     for line in code_txt.split('\n'):
         line = line.strip() 
@@ -202,7 +203,11 @@ def main () :
                     print_and_add2list(f"{OPCODES[parts[0]]}{int_2_binary_12bit(variables[parts[1]])}")
             elif parts[0] in opcode_j : 
                 print_and_add2list(f"{OPCODES[parts[0]]}{int_2_binary_12bit(labels[parts[1]])}")
-
+    
+    
+    for _0   in variables : 
+        # print_and_add2list(int_2_binary_16bit( variables[_0] ))
+        print_and_add2list(int_2_binary_16bit( 0 ))
 
     # print_and_add2list( "\n" , labels)
     save_0and1s_to_file( path , list_01s )
