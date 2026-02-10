@@ -6,7 +6,7 @@ the source code address : [source](https://www.cs.hiroshima-u.ac.jp/~nakano/wiki
 the cpu is fpga-friendly and can get implemented really good on the fpga boards.
 
 # Architecture
-![TinyCPU Architecture](pdf_s\TINYCPU_Architecture.png)
+![TinyCPU Architecture](pdf_s/TINYCPU_Architecture.png)
 
 -Data Width: 16-bit                                      
 -Architecture: Stack-based (8-level stack)                                              
