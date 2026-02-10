@@ -1,6 +1,7 @@
-int x = 36 ;
-int y ;
-int i ;
+// int x = 36 ;
+int x = 0 ;
+// int y ;
+// int i ;
 
 // // y = 72 - x ;
 // // y = y * 1 ;
@@ -14,11 +15,13 @@ int i ;
 
 // if ( y == 36 ) { out( 1 ); } else { out( 0 ); } 
 
-while ( i <= 10 ) { if ( x == 36 ) { out( 1 ) ; i = i + 1 ; } else { out( 0 ) ; } }
+// while ( i <= 10 ) { if ( x == 36 ) { out( 1 ) ; i = i + 1 ; } else { out( 0 ) ; } }
 
 
-if ( x == 36 ) { out( 1 ) ; i = i + 1 ; } else { out( 0 ) ; }
+// if ( x == 36 ) { out( 1 ) ; i = i + 1 ; } else { out( 0 ) ; }
 
+while ( x < 10 ) { x = x + 1 ; out( x ) ; }
+ 
 // out(y);
 halt;
 
