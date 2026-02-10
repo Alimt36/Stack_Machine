@@ -8,12 +8,12 @@ the cpu is fpga-friendly and can get implemented really good on the fpga boards.
 # Architecture
 ![TinyCPU Architecture]("A:\projects\hardware\Stack_Machine\pdf_s\TINYCPU_Architecture.png")
 
--Data Width: 16-bit
--Architecture: Stack-based (8-level stack)
--Memory: 256 words RAM (configurable up to 4096)
--ALU Operations: 19 operations including arithmetic, logical, bitwise, and comparison
--Instruction Set: 12 instruction types
--State Machine: 5-state fetch-decode-execute cycle
+-Data Width: 16-bit                                      
+-Architecture: Stack-based (8-level stack)                                              
+-Memory: 256 words RAM (configurable up to 4096)                                           
+-ALU Operations: 19 operations including arithmetic, logical, bitwise, and comparison                            
+-Instruction Set: 12 instruction types                                                         
+-State Machine: 5-state fetch-decode-execute cycle                                      
 
 Instruction Set:
 | Opcode | Instruction |
@@ -44,25 +44,23 @@ tinycpu/
 │       └── state.v
 │
 ├── docs/
-│   ├── architecture.pdf   # CPU architecture specification
-│   └── instruction_set.pdf # Detailed instruction set documentation
+│   ├── ...
+│   └── ...
 │
 ├── toolchain/
+|   |
 │   ├── legacy/            # Original Perl/Lex/Yacc toolchain
+|   |   |
 │   │   ├── tinyc.l
 │   │   ├── tinyc.y
 │   │   └── asm.pl
 │   │
 │   └── python/            # Python-based toolchain
+|       |
 │       ├── TINYCPU_compiler_in_python.py
 │       ├── TINYCPU_assembler_in_python.py
 │       ├── TINYCPU_mac2mem_in_python.py
 │       └── TINYCPU_build_all.py
-│
-├── examples/
-│   ├── factorial.c
-│   ├── fibonacci.c
-│   └── loop_test.c
 │
 └── README.md
 ```
