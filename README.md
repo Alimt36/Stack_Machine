@@ -109,7 +109,7 @@ the c-like language that the compiler accepts is as follows :
 - the characters of diffrent purpose is better to be seprated by space! 
 
 a valid example: 
-```
+```c
 int x = 36 ;
 int y ;
 int i ;
@@ -120,3 +120,10 @@ if ( x == 36 ) { out( 1 ) ; i = i + 1 ; } else { out( 0 ) ; }
 
 halt;
 ```
+
+## Usage flow: 
+1- write the code in c-like language                                                                              
+2- use the python toolchain to get memory initialization lines for the cpu                                          
+3- add the memory initialization lines to the (ram.v)                                                                
+4- implement the cpu on a fpga                                                                                     
+5- let cpu run your code! 
