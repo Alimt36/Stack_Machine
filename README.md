@@ -1,6 +1,6 @@
 # TINYCPU : A Stack_Machine : A 16-bit Stack-Based Processor
 
-the architecture and the design of the cpu is for the university of the hiroshima and engineers there 
+the architecture and the design of the cpu is for the university of the hiroshima and engineers there                
 the source code address : [source](https://www.cs.hiroshima-u.ac.jp/~nakano/wiki/#p5)
 
 the cpu is fpga-friendly and can get implemented really good on the fpga boards.
