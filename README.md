@@ -1,5 +1,5 @@
 ## Repository Structure
-the repository is divided to 2 main parts, Hardware and Software. The following tree shows the file structure of the repository and then the parts will be explained separately
+The repository is divided to 2 main parts, Hardware and Software. The following tree shows the file structure of the repository and then the parts will be explained separately.
 ```
 tinycpu/
 ├── hardware/
@@ -98,7 +98,7 @@ The source code provides a toolchain that can compile and assemble from a C-like
 - **TINYCPU_compiler_in_python.py:** Gets the C-like code address and generates the stack assembly
 - **TINYCPU_assembler_in_python.py:** Gets the stack assembly and generates the binary
 - **TINYCPU_mac2mem_in_python.py:** Gets the binary code and converts it to Verilog memory initialization format
-- **TINYCPU_build_all.py:** Connects all 3 codes above for ease of use; only needs the path of the C-like code and does everything needed
+- **TINYCPU_toolchain_controler.py:** Connects all 3 codes above for ease of use; only needs the path of the C-like code and does everything needed
 
 ![compiler-assembler in python](tinyc_python/py_code_pic_for_readme.png)
 
