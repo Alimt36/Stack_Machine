@@ -1,9 +1,9 @@
 # Auto detect text files and perform LF normalization
 # * text=auto
 *.v linguist-language=Verilog
-# *.sv linguist-language=SystemVerilog
+*.sv linguist-language=SystemVerilog
 *.py linguist-language=Python
-# *.pl linguist-language=Perl
-# *.l linguist-language=Lex
-# *.y linguist-language=Yacc
+*.pl linguist-language=Perl
+*.l linguist-language=Lex
+*.y linguist-language=Yacc
 
