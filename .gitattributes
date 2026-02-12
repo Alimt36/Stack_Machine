@@ -2,7 +2,7 @@
 # * text=auto
 
 *.v linguist-detectable=true
-*.py linguist-detectable=false
+*.py linguist-detectable=true
 source_code/* linguist-language=Verilog
 
 # *.v linguist-language=Verilog
