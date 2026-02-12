@@ -1,16 +1,16 @@
 # Auto detect text files and perform LF normalization
 # * text=auto
 
-# *.v linguist-detectable=true
-# *.py linguist-detectable=true
-# # hardware/* linguist-language=Verilog
+*.v linguist-detectable=true
+*.py linguist-detectable=true
+source_code/* linguist-language=Verilog
 
-*.v linguist-language=Verilog
-*.sv linguist-language=Verilog
+# *.v linguist-language=Verilog
+# *.sv linguist-language=Verilog
 
-compiler-assembler/python/* linguist-vendored
+# compiler-assembler/python/* linguist-vendored
 
-compiler-assembler/legacy/* linguist-vendored=false
+# compiler-assembler/legacy/* linguist-vendored=false
 
-*.md linguist-documentation
-docs/* linguist-documentation
+# *.md linguist-documentation
+# docs/* linguist-documentation
