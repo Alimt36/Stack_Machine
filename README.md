@@ -1,5 +1,5 @@
 ## Repository Structure
-The repository is divided to 2 main parts, Hardware and Software. The following tree shows the file structure of the repository and then the parts will be explained separately.
+The repository is divided into 2 main parts, Hardware and Software. The following tree shows the file structure of the repository and then the parts will be explained separately.
 ```
 tinycpu/
 ├── hardware/
