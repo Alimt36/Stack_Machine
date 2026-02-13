@@ -71,9 +71,13 @@ def math_operation ( line ) :
                     elif chars == '*' : operation_str = "MUL"
                     elif chars == ';' : line_end = 1
                     else :
-                        # print("Invalid Syntax") 
-                        # operation_str = "-1"
-                        print_and_add2list(f"PUSH {chars.strip()}")
+                        if '[' in chars : 
+                            for _ in range( 0 , len(chars)) : 
+                                if chars[_] == '[' : temp0 = _
+                                if chars[_] == ']' : temp1 = _ 
+                            print_and_add2list(f"PUSH {(chars[:temp0]).strip()}{chars[temp0+1:temp1]}")
+                        else :
+                            print_and_add2list(f"PUSH {chars.strip()}")
     print_and_add2list(operation_str)
 #---------------------------------------------------------------------------------------------------------------------------
 
@@ -128,8 +132,20 @@ def save_value( var , val=0 ) :
         except : 
             # Invalid_Syntax = 1
             return False
-    else : 
-        print_and_add2list(f"POP {var}")   
+    else :
+        if '[' in var : 
+            for _ in range( 0 , len(var)) : 
+                                if var[_] == '[' : temp0 = _
+                                if var[_] == ']' : temp1 = _ 
+            try : 
+                temp = int(var[temp0+1:temp1])
+                print_and_add2list(f"POP {(var[:temp0]).strip()}{var[temp0+1:temp1]}")
+            except : 
+                # print_and_add2list(f"POP {(var[:temp0]).strip()}{array_index_evaluate( var[temp0+1:temp1] )}")
+                print_and_add2list(f"Inconsistant array is not supported!!!!!!!!!")
+                
+        else : 
+            print_and_add2list(f"POP {var}")   
 
 def save_value_by_variable(var , val ) : 
     
@@ -141,6 +157,24 @@ def save_value_by_variable(var , val ) :
     except :
         print_and_add2list(f"PUSH {val}") 
         print_and_add2list(f"POP {var}")
+
+def array_defenition( parts ) : 
+    # parts = line.split(' ')
+    for _ in range (0 , len(parts[1]) ) : 
+        if (parts[1])[_] == '[' : temp0 = _
+        if (parts[1])[_] == ']' : temp1 = _
+    try : 
+        x = int((parts[1])[temp0+1 : temp1])
+        for _ in range ( 0 , x ) : 
+            new_parts = ["int" , f"{(parts[1])[:temp0]}{_}" , ";" ]
+            variable_definition( new_parts )
+    except : 
+        print_and_add2list("Some ERROR happend!")
+
+def array_index_evaluate( index ) : 
+    global asm_list
+    for i in range( 0 , len(asm_list)) : 
+        pass
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------
@@ -411,11 +445,23 @@ def main () :
                 parts = line.split(' ')
 
                 if parts[0] == "int" :
-                    variable_definition( parts )
+                    if "[" in line and "]" in line : 
+                        array_defenition( parts )
+                    else : 
+                        variable_definition( parts )
 
                 elif len(parts) > 1 and parts[1] == "=" :
                     if len(parts) == 4 :
-                        save_value_by_variable( parts[0] , parts[2] )
+                        if ']' in parts[0] and ']' in parts[2] : 
+                            # pass
+                            save_value_by_variable( f"{(parts[0])[:parts[0].find('[')]}{(parts[0])[parts[0].find('[')+1:parts[0].find(']')]}" ,
+                                                    f"{(parts[2])[:parts[2].find('[')]}{(parts[2])[parts[2].find('[')+1:parts[2].find(']')]}" )
+                        elif ']' in parts[0] and  ']' not in parts[2] : 
+                            save_value_by_variable( f"{(parts[0])[:parts[0].find('[')]}{(parts[0])[parts[0].find('[')+1:parts[0].find(']')]}" , parts[2] )
+                        elif ']' not in parts[0] and  ']' in parts[2] : 
+                            save_value_by_variable( parts[0] , f"{(parts[2])[:parts[2].find('[')]}{(parts[2])[parts[2].find('[')+1:parts[2].find(']')]}" )
+                        else :
+                            save_value_by_variable( parts[0] , parts[2] )
                     else :
                         math_operation( f"{parts[2]} {parts[3]} {parts[4]}" )
                         save_value(parts[0] , None)
