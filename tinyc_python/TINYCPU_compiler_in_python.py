@@ -87,7 +87,8 @@ def math_operation ( line ) :
 #       - that case saves 0 by default
 #   variable_definition : when a "int" is there it is called and saves the variable
 #   save_value : saves a value to a defined variable
-#   save_value_by_variable : a better function that saves a value to a variable  
+#   save_value_by_variable : a better function that saves a value to a variable
+#   array_defenition : handles defenition of arrays by duplicationg variables in the in the size given
 #---------------------------------------------------------------------------------------------------------------------------
 def save_variable ( i , parts , value ) :
     global Invalid_Syntax
@@ -171,10 +172,11 @@ def array_defenition( parts ) :
     except : 
         print_and_add2list("Some ERROR happend!")
 
-def array_index_evaluate( index ) : 
-    global asm_list
-    for i in range( 0 , len(asm_list)) : 
-        pass
+# def array_index_evaluate( index ) : 
+#     global asm_list
+#     for i in range( 0 , len(asm_list)) : 
+#         pass
+
 #---------------------------------------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------------------------------------

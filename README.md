@@ -106,6 +106,7 @@ The source code provides a toolchain that can compile and assemble from a C-like
 
 The C-like language that the compiler accepts has the following rules:
 - Variable definition: only one per line
+- Array support : supports only consistant indexing because of hardware limitations! and doesn't handle initialization by value  
 - Math operations: only one per line and must be in the format `{operand0 operation operand1}`
 - If-else and while: supported but must be written in one line
 - Characters of different purposes are better separated by spaces
@@ -115,10 +116,13 @@ The C-like language that the compiler accepts has the following rules:
 int x = 36 ;
 int y ;
 int i ;
+int Some_Array[10] ;
 
 while ( i <= 10 ) { if ( x == 36 ) { out( 1 ) ; i = i + 1 ; } else { out( 0 ) ; } }
 
 if ( x == 36 ) { out( 1 ) ; i = i + 1 ; } else { out( 0 ) ; }
+
+Some_Array[9] = Some_Array[0] + x ;
 
 halt;
 ```
