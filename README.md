@@ -23,7 +23,7 @@ tinycpu/
 │       ├── TINYCPU_compiler_in_python.py
 │       ├── TINYCPU_assembler_in_python.py
 │       ├── TINYCPU_mac2mem_in_python.py
-│       └── TINYCPU_build_all.py
+│       └── TINYCPU_toolchain_controler.py
 │
 ├── docs/
 │   ├── ...
