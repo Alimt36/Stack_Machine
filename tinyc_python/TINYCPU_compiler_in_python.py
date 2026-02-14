@@ -149,15 +149,18 @@ def save_value( var , val=0 ) :
             print_and_add2list(f"POP {var}")   
 
 def save_value_by_variable(var , val ) : 
-    
-    try : 
-        x = int(val)
-        print_and_add2list(f"PUSHI {x}")
+    if val == "in" : 
+        print_and_add2list(f"IN")
         print_and_add2list(f"POP {var}")
-        return True
-    except :
-        print_and_add2list(f"PUSH {val}") 
-        print_and_add2list(f"POP {var}")
+    else : 
+        try : 
+            x = int(val)
+            print_and_add2list(f"PUSHI {x}")
+            print_and_add2list(f"POP {var}")
+            return True
+        except :
+            print_and_add2list(f"PUSH {val}") 
+            print_and_add2list(f"POP {var}")
 
 def array_defenition( parts ) : 
     # parts = line.split(' ')
@@ -200,6 +203,15 @@ def out_handler( line ) :
         print_and_add2list(f"PUSH {temp}")
         print_and_add2list("OUT")
 #---------------------------------------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------------------------------------
+# in handler:
+#---------------------------------------------------------------------------------------------------------------------------
+def in_handler( parts ) : 
+    print_and_add2list(f"IN")
+    print_and_add2list(f"POP {parts[1].strip()}") 
+#---------------------------------------------------------------------------------------------------------------------------
+
 
 #---------------------------------------------------------------------------------------------------------------------------
 # if handler :
@@ -449,8 +461,11 @@ def main () :
                 if parts[0] == "int" :
                     if "[" in line and "]" in line : 
                         array_defenition( parts )
-                    else : 
-                        variable_definition( parts )
+                    else :
+                        if len(parts) > 3 and parts[3] == "in" : 
+                            in_handler(parts)
+                        else :
+                            variable_definition( parts )
 
                 elif len(parts) > 1 and parts[1] == "=" :
                     if len(parts) == 4 :

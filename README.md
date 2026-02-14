@@ -131,7 +131,7 @@ halt;
 1. Write the code in C-like language
 2. Use the Python toolchain to get memory initialization lines for the CPU
 3. Add the memory initialization lines to the `ram.v` module
-4. Implement the CPU on an FPGA
+4. Implement the CPU on a FPGA
 5. Let the CPU run your code!
 ---
                                                                                                                  
