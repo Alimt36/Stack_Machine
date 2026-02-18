@@ -1,31 +1,29 @@
 ## Repository Structure
 The repository is divided into 2 main parts, Hardware and Software. The following tree shows the file structure of the repository and then the parts will be explained separately.
 ```
-tinycpu/
-├── hardware/
-│   ├── tinycpu.v
-│   ├── tinycpu_tb.v
-│   └── modules/
-│       ├── alu.v
-│       ├── stack.v
-│       ├── ram.v
-│       ├── counter.v
-│       └── state.v
+Stack_Machine/
+├── source_code/            
+│   ├──tinyCPU/            # hardware  
+│   |    ├──tinycpu.v
+│   |    ├──alu.v 
+│   |    ├──stack.v
+|   |    ├──ram.v
+|   |    ├──counter.v
+|   |    ├──defs.v
+|   |    └──state.v
+│   |    
+│   └──tinyasm_tinyc/       # Original Perl/Lex/Yacc toolchain
+│        ├── tinyc.l
+│        ├── tinyc.y
+│        └── asm.pl
+|        
+├──tinyc_python/           # Python-based toolchain
+│   ├── TINYCPU_compiler_in_python.py
+│   ├── TINYCPU_assembler_in_python.py
+│   ├── TINYCPU_mac2mem_in_python.py
+│   └── TINYCPU_toolchain_controler.py
 │
-├── compiler-assembler/
-│   │
-│   ├── legacy/            # Original Perl/Lex/Yacc toolchain
-│   │   ├── tinyc.l
-│   │   ├── tinyc.y
-│   │   └── asm.pl
-│   │
-│   └── python/            # Python-based toolchain
-│       ├── TINYCPU_compiler_in_python.py
-│       ├── TINYCPU_assembler_in_python.py
-│       ├── TINYCPU_mac2mem_in_python.py
-│       └── TINYCPU_toolchain_controler.py
-│
-├── docs/
+├── pdf_s/                 # docs relatd to the cpu and software
 │   ├── ...
 │   └── ...
 │
@@ -131,7 +129,7 @@ halt;
 1. Write the code in C-like language
 2. Use the Python toolchain to get memory initialization lines for the CPU
 3. Add the memory initialization lines to the `ram.v` module
-4. Implement the CPU on a FPGA
+4. Implement the CPU on an FPGA
 5. Let the CPU run your code!
 ---
                                                                                                                  
