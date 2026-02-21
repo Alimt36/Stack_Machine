@@ -17,8 +17,10 @@ module state(clk,reset,run,cont,halt,cs);
         `EXECA: if(halt) cs <= `IDLE;
                 else if(cont) cs <= `EXECB;
                 else cs <= `FETCHA;
-        `EXECB: cs <= `FETCHA;
-        default: cs <= 3'bxxx;
+        `EXECB:  if(cont) cs <= `EXECC;  
+                 else cs <= `FETCHA;
+        `EXECC:  cs <= `FETCHA;
+        default: cs <= `IDLE;
       endcase
 
 endmodule

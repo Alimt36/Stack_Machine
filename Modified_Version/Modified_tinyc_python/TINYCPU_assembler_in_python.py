@@ -4,36 +4,39 @@ import os
 OPCODES = {
     "HALT": "0000000000000000",
 
-    "PUSHI": "0001",  # 0001iiiiiiiiiiii
-    "PUSH" : "0010",  # 0010aaaaaaaaaaaa
-    "POP"  : "0011",  # 0011aaaaaaaaaaaa
+    "PUSHI"    : "0001",  # 0001iiiiiiiiiiii
+    "PUSH"     : "0010",  # 0010aaaaaaaaaaaa
+    "POP"      : "0011",  # 0011aaaaaaaaaaaa
+        
+    "PUSH_IND" : "0111",  # 0111( array base address )
+    "POP_IND"  : "1000" , # 1000( array base address )
+
+    "JMP"      : "0100",  # 0100aaaaaaaaaaaa
+    "JZ"       : "0101",  # 0101aaaaaaaaaaaa
+    "JNZ"      : "0110",  # 0110aaaaaaaaaaaa
     
-    "JMP"  : "0100",  # 0100aaaaaaaaaaaa
-    "JZ"   : "0101",  # 0101aaaaaaaaaaaa
-    "JNZ"  : "0110",  # 0110aaaaaaaaaaaa
-
-    "IN"   : "1101000000000000",
-    "OUT"  : "1110000000000000",
-
-    "ADD"  : "1111000000000000",
-    "SUB"  : "1111000000000001",
-    "MUL"  : "1111000000000010",
-    "SHL"  : "1111000000000011",
-    "SHR"  : "1111000000000100",
-    "BAND" : "1111000000000101",
-    "BOR"  : "1111000000000110",
-    "BXOR" : "1111000000000111",
-    "AND"  : "1111000000001000",
-    "OR"   : "1111000000001001",
-    "EQ"   : "1111000000001010",
-    "NE"   : "1111000000001011",
-    "GE"   : "1111000000001100",
-    "LE"   : "1111000000001101",
-    "GT"   : "1111000000001110",
-    "LT"   : "1111000000001111",
-    "NEG"  : "1111000000010000",
-    "BNOT" : "1111000000010001",
-    "NOT"  : "1111000000010010",
+    "IN"       : "1101000000000000",
+    "OUT"      : "1110000000000000",
+    
+    "ADD"      : "1111000000000000",
+    "SUB"      : "1111000000000001",
+    "MUL"      : "1111000000000010",
+    "SHL"      : "1111000000000011",
+    "SHR"      : "1111000000000100",
+    "BAND"     : "1111000000000101",
+    "BOR"      : "1111000000000110",
+    "BXOR"     : "1111000000000111",
+    "AND"      : "1111000000001000",
+    "OR"       : "1111000000001001",
+    "EQ"       : "1111000000001010",
+    "NE"       : "1111000000001011",
+    "GE"       : "1111000000001100",
+    "LE"       : "1111000000001101",
+    "GT"       : "1111000000001110",
+    "LT"       : "1111000000001111",
+    "NEG"      : "1111000000010000",
+    "BNOT"     : "1111000000010001",
+    "NOT"      : "1111000000010010",
 }
 
 opcpde_16 = ["HALT","IN","OUT","ADD","SUB","MUL","SHL","SHR","BAND","BOR","BXOR" ,"AND","OR","EQ","NE","GE","LE","GT" , "LT" , "NEG" , "BNOT" , "NOT"]
@@ -205,9 +208,12 @@ def main () :
             elif parts[0] in opcode_j : 
                 print_and_add2list(f"{OPCODES[parts[0]]}{int_2_binary_12bit(labels[parts[1]])}")
             elif parts[0] == "POP_IND" : 
-# something with the variables dictionary !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                print_and_add2list(f"1000{ int_2_binary_12bit( variables[f"{parts[1]}0"] ) }")
             elif parts[0] == "PUSH_IND" : 
-    
+                # pass
+                print_and_add2list(f"0111{ int_2_binary_12bit( variables[f"{parts[1]}0"] ) }")
+
+
     for _0   in variables : 
         # print_and_add2list(int_2_binary_16bit( variables[_0] ))
         print_and_add2list(int_2_binary_16bit( 0 ))

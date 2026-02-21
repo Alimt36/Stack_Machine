@@ -304,17 +304,39 @@ def parse_condition(condition):
             left = parts[0].strip()
             right = parts[1].strip()
             
-            try:
-                x = int(left)
-                print_and_add2list(f"PUSHI {x}")
-            except:
-                print_and_add2list(f"PUSH {left}")
+            # Handle left operand (could be array element)
+            if '[' in left and ']' in left:
+                arr_name = left[:left.find('[')]
+                index = left[left.find('[')+1:left.find(']')]
+                
+                if indexing_type_finder(index) == "direct":
+                    print_and_add2list(f"PUSH {arr_name}{index}")
+                else:
+                    print_and_add2list(f"PUSH {index}")
+                    print_and_add2list(f"PUSH_IND {arr_name}")
+            else:
+                try:
+                    x = int(left)
+                    print_and_add2list(f"PUSHI {x}")
+                except:
+                    print_and_add2list(f"PUSH {left}")
             
-            try:
-                x = int(right)
-                print_and_add2list(f"PUSHI {x}")
-            except:
-                print_and_add2list(f"PUSH {right}")
+            # Handle right operand (could be array element)
+            if '[' in right and ']' in right:
+                arr_name = right[:right.find('[')]
+                index = right[right.find('[')+1:right.find(']')]
+                
+                if indexing_type_finder(index) == "direct":
+                    print_and_add2list(f"PUSH {arr_name}{index}")
+                else:
+                    print_and_add2list(f"PUSH {index}")
+                    print_and_add2list(f"PUSH_IND {arr_name}")
+            else:
+                try:
+                    x = int(right)
+                    print_and_add2list(f"PUSHI {x}")
+                except:
+                    print_and_add2list(f"PUSH {right}")
             
             print_and_add2list(op_code)
             return
@@ -337,7 +359,10 @@ def parse_statement(stmt):
         stmt = stmt.rstrip(';').strip()
         parts = stmt.split()
         
-        if len(parts) == 3:
+        # Check if it involves arrays (has '[' or ']')
+        if ']' in stmt:
+            array_handler(parts)
+        elif len(parts) == 3:
             save_value_by_variable(parts[0], parts[2])
         elif len(parts) == 5:
             math_operation(f"{parts[2]} {parts[3]} {parts[4]}")
@@ -348,7 +373,7 @@ def parse_statement(stmt):
     
     else:
         print(f"// Unknown statement: {stmt}")
- 
+
 def if_handler( line ) :
     # if '{' not in line:
         if 'else' in line:
@@ -504,8 +529,6 @@ def array_handler( parts ) :
                                                (parts[2])[parts[2].find('[')+1:parts[2].find(']')] ,
                                                 parts[0] ,
                                                 "PUSH_IND" )
-
-
 
 #---------------------------------------------------------------------------------------------------------------------------
 
