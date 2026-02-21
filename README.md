@@ -136,6 +136,7 @@ The C-like language that the compiler accepts has the following rules:
 - Math operations: only one per line and must be in the format `{operand0 operation operand1}`
 - If-else and while: supported but must be written in one line
 - Characters of different purposes are better separated by spaces
+- Always remember to put `halt;` in the end of your codes , if you dont the variables will be over-written not interesting things will happen
 
 **A valid example:**
 ```c
@@ -174,7 +175,7 @@ I also modified the base python toolchain that i had written earlier to support 
                      │           ▼
                      │      ┌──────────┐
                      │      │          │ (001)
-                     │      │  FETCHA  │                                   
+                     │<─────│  FETCHA  │                                   
                      │      │          │<────────────────────────────┐          
                      │      └────┬─────┘                             |                
                      │           │                                   |                
@@ -193,7 +194,7 @@ I also modified the base python toolchain that i had written earlier to support 
                      │      ┌──────────┐                             |     
                halt=1│      │  EXECA   │ (011)                       |                     
                      │      │          │             cont=0          |           
-                     │      │ Decode   │─────────────────────────────|      
+                     │      │ Decode   │────────────────────────────>|      
                      |<─────┤ Execute  │                             |                          
                      |      └────┬─────┘                             |           
                      |           │                                   |                          
@@ -206,7 +207,7 @@ I also modified the base python toolchain that i had written earlier to support 
                      |                   ┌──────────┐                |
                      |                   │  EXECB   │ (100)          |
                      |                   │          │       cont=0   |
-                     |                   │ PUSH: RAM│────────────────┘
+                     |                   │ PUSH: RAM│───────────────>|
                      |             cont=0│ *_IND:   │                |      
                      |                   │  ind2abus│                |      
                      |                   └────┬─────┘                |      
@@ -218,17 +219,17 @@ I also modified the base python toolchain that i had written earlier to support 
                      |                   ┌──────────┐                |      
                      |                   │  EXECC   │ (101)          |      
                      |                   │          │                |      
-                     └───────────────────│ PUSH_IND:│                |      
+                     └─────────<─────────│ PUSH_IND:│                |      
                                          │ ram2dbus │                |      
                                          │ push     │                |      
                                          └────┬─────┘                |      
                                               │                      |      
                                               │ always               |      
                                               │                      |      
-                                              └──────────────────────┘             
+                                              └───────────>──────────┘             
 ```
 
-**Additional Pints on C-like Language**
+**Additional Points on C-like Language**
 - In every line and statement the compiler supports only one array usage. 
 - out cannot handle arrays. if want to out array value swap value with a variable.
 ```c
@@ -241,7 +242,10 @@ Some_Array[2] = x ;
 
 while ( i < 36 ) { x = A[i] ; out( x ) ; i = i + 1 ; }
 
+halt;
 ```
+- Don't forget to put `halt;` at the end
+- And always code regarding this note and the note above about the compiler!
 ---
 ## Usage Flow:
 no matter what version you use , 
