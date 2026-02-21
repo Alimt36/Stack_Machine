@@ -1,9 +1,226 @@
+`define IDLE 3'b000
+`define FETCHA 3'b001
+`define FETCHB 3'b010
+`define EXECA 3'b011
+`define EXECB 3'b100
+
+`define ADD 5'b00000
+`define SUB 5'b00001
+`define MUL 5'b00010
+`define SHL 5'b00011
+`define SHR 5'b00100
+`define BAND 5'b00101
+`define BOR 5'b00110
+`define BXOR 5'b00111
+`define AND 5'b01000
+`define OR 5'b01001
+`define EQ 5'b01010
+`define NE 5'b01011
+`define GE 5'b01100
+`define LE 5'b01101
+`define GT 5'b01110
+`define LT 5'b01111
+`define NEG 5'b10000
+`define BNOT 5'b10001
+`define NOT 5'b10010
+
+`define HALT 4'b0000
+`define PUSHI 4'b0001
+`define PUSH 4'b0010
+`define POP 4'b0011
+`define JMP 4'b0100
+`define JZ 4'b0101
+`define JNZ 4'b0110
+`define IN 4'b1101
+`define OUT 4'b1110
+`define OP 4'b1111
+
+//---------------------------------------------------------------------------------------------------------------------------
+// indirect addressing support 
+//---------------------------------------------------------------------------------------------------------------------------
+`define PUSH_IND 4'b0111  
+`define POP_IND 4'b1000   
+
+//---------------------------------------------------------------------------------------------------------------------------
+// additional state for indirecct sync RAM access 
+//---------------------------------------------------------------------------------------------------------------------------
+`define EXECC  3'b101   
+
+
+module alu(a, b, f, s);
+
+ input[15:0] a, b;
+ input[4:0]f;
+ output[15:0]s;
+ reg[15:0]s;
+ wire[15:0] x, y;
+
+ assign x = a + 16'h8000;
+ assign y = b + 16'h8000;
+  
+ always @(a or b or x or y or f)
+   case(f)
+     `ADD : s = b + a;
+     `SUB : s = b - a;
+     `MUL : s = b * a;
+     `SHL : s = b << a;
+     `SHR : s = b >> a;
+     `BAND: s = b & a;
+     `BOR : s = b | a;
+     `BXOR: s = b ^ a;
+     `AND : s = b && a;
+     `OR : s = b || a;
+     `EQ : s = b == a;
+     `NE : s = b != a;
+     `GE : s = y >= x;
+     `LE : s = y <= x;
+     `GT : s = y > x;
+     `LT : s = y < x;
+     `NEG : s = -a;
+     `BNOT : s = ~a;
+     `NOT : s = !a;
+     default : s = 16'hxxxx;
+   endcase
+
+endmodule
+
+
+module counter(clk,reset,load,inc,d,q);
+  parameter N = 16;
+   
+  input clk,reset,load,inc;
+  input[N-1:0] d;
+  output[N-1:0] q;
+  reg [ N-1:0 ] q ;
+
+  always @(posedge clk or negedge reset)
+    if(!reset) q <= 0;
+    else if(load) q <= d;
+    else if(inc) q <= q + 1;
+
+endmodule
+
+module ram(clk, load, addr, d, q);
+ parameter DWIDTH=16,AWIDTH=12,WORDS=4096;
+
+ input clk,load;
+ input[AWIDTH-1:0] addr;
+ input[DWIDTH-1:0] d;
+ output[DWIDTH-1:0] q;
+ reg [DWIDTH-1:0] q;
+ reg [DWIDTH-1:0] mem [WORDS-1:0];
+
+ always @(posedge clk)
+   begin
+     if(load) mem[addr] <= d;
+     q <= mem[addr];
+   end
+
+ integer i;
+ initial begin
+    for(i=0;i<WORDS;i=i+1)
+       mem[i]=0;
+// Write memory initialization here (e.g., mem[12'h001]=16'h1234;).
+   
+    mem[12'b000000000000] = 16'b0001000000000000 ;
+    mem[12'b000000000001] = 16'b0011000000011100 ;
+    mem[12'b000000000010] = 16'b0001000000000000 ;
+    mem[12'b000000000011] = 16'b0011000000011101 ;
+    mem[12'b000000000100] = 16'b0001000000000000 ;
+    mem[12'b000000000101] = 16'b0011000000011110 ;
+    mem[12'b000000000110] = 16'b0001000000000000 ;
+    mem[12'b000000000111] = 16'b0011000000011111 ;
+    mem[12'b000000001000] = 16'b0001000000000000 ;
+    mem[12'b000000001001] = 16'b0011000000100000 ;
+    mem[12'b000000001010] = 16'b0010000000011111 ;
+    mem[12'b000000001011] = 16'b0001000000000010 ;
+    mem[12'b000000001100] = 16'b1111000000001101 ;
+    mem[12'b000000001101] = 16'b0101000000011011 ;
+    mem[12'b000000001110] = 16'b0010000000011111 ;
+    mem[12'b000000001111] = 16'b0010000000011111 ;
+    mem[12'b000000010000] = 16'b1000000000011100 ;
+    mem[12'b000000010001] = 16'b0010000000011111 ;
+    mem[12'b000000010010] = 16'b0111000000011100 ;
+    mem[12'b000000010011] = 16'b0011000000100000 ;
+    mem[12'b000000010100] = 16'b0010000000100000 ;
+    mem[12'b000000010101] = 16'b1110000000000000 ;
+    mem[12'b000000010110] = 16'b0010000000011111 ;
+    mem[12'b000000010111] = 16'b0001000000000001 ;
+    mem[12'b000000011000] = 16'b1111000000000000 ;
+    mem[12'b000000011001] = 16'b0011000000011111 ;
+    mem[12'b000000011010] = 16'b0100000000001010 ;
+    mem[12'b000000011011] = 16'b0000000000000000 ;
+    mem[12'b000000011100] = 16'b0000000000000000 ;
+    mem[12'b000000011101] = 16'b0000000000000000 ;
+    mem[12'b000000011110] = 16'b0000000000000000 ;
+    mem[12'b000000011111] = 16'b0000000000000000 ;
+    mem[12'b000000100000] = 16'b0000000000000000 ;
+ end
+
+
+
+endmodule
+
+
+module stack(clk, reset, load, push, pop, d, qtop, qnext);
+  parameter N = 8;
+	 
+  input clk, reset, load, push, pop;
+  input[15:0]d;
+  output[15:0] qtop, qnext;
+  reg [15:0] q [0:N-1];
+
+  assign qtop = q[0];
+  assign qnext = q[1];
+   
+  always @(posedge clk or negedge reset)
+    if(!reset) q[0] <= 0;
+    else if(load) q[0] <= d;
+    else if(pop) q[0] <= q[1];
+
+  integer i;
+  always @(posedge clk or negedge reset)
+    for(i=1;i< N-1;i=i+1)
+      if(!reset) q[i] <= 0;
+      else if(push) q[i] <= q[i-1];
+      else if(pop) q[i] <= q[i+1];
+   
+  always @(posedge clk or negedge reset)
+    if(!reset) q[N-1] <= 0;
+    else if(push) q[N-1] <= q[N-2];
+endmodule
+
+
+module state(clk,reset,run,cont,halt,cs);
+  
+  input clk, reset, run, cont, halt;
+  output[2:0]cs;
+
+  reg[2:0]cs;
+
+  always @(posedge clk or negedge reset)
+    if(!reset) cs <= `IDLE;
+    else
+      case(cs)
+        `IDLE: if(run) cs <= `FETCHA;
+        `FETCHA: cs <= `FETCHB;
+        `FETCHB: cs <= `EXECA;
+        `EXECA: if(halt) cs <= `IDLE;
+                else if(cont) cs <= `EXECB;
+                else cs <= `FETCHA;
+        `EXECB:  if(cont) cs <= `EXECC;  
+                 else cs <= `FETCHA;
+        `EXECC:  cs <= `FETCHA;
+        default: cs <= `IDLE;
+      endcase
+
+endmodule
+
+
 //---------------------------------------------------------------------------------------------------------------------------
 // source: 
 //      https://www.cs.hiroshima-u.ac.jp/~nakano/wiki/#p5
 //---------------------------------------------------------------------------------------------------------------------------
-
-`include "defs.v"
 
 module tinycpu(clk, reset, run, in, cs, pcout, irout, qtop, abus, dbus, out);
 

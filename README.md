@@ -21,8 +21,35 @@ Stack_Machine/
 │   ├── TINYCPU_compiler_in_python.py
 │   ├── TINYCPU_assembler_in_python.py
 │   ├── TINYCPU_mac2mem_in_python.py
-│   └── TINYCPU_toolchain_controler.py
-│
+│   ├── TINYCPU_toolchain_controler.py
+│   ├── TINYCPU_code.c
+|   ├── generated_assebly.txt
+|   ├── generated_0and1s.txt
+|   └── generated_mac2mem.txt
+|
+├──Modified_Version/       # Modified version folder 
+|   ├──Modified_Stack_Machine/
+│   |    ├──tinycpu.v
+│   |    ├──alu.v 
+│   |    ├──stack.v
+|   |    ├──ram.v
+|   |    ├──counter.v
+|   |    ├──defs.v
+|   |    ├──state.v
+|   |    |
+|   |    ├──Modified_Stack_Machine_AllInOne.v
+|   |    └──testbench.v
+|   |
+|   └──Modified_tinyc_python/   
+|        ├── TINYCPU_compiler_in_python.py
+│        ├── TINYCPU_assembler_in_python.py
+│        ├── TINYCPU_mac2mem_in_python.py
+│        ├── TINYCPU_toolchain_controler.py
+│        ├── TINYCPU_code.c
+|        ├── generated_assebly.txt
+|        ├── generated_0and1s.txt
+|        └── generated_mac2mem.txt
+|
 ├── pdf_s/                 # docs relatd to the cpu and software
 │   ├── ...
 │   └── ...
@@ -133,4 +160,4 @@ halt;
 5. Let the CPU run your code!
 ---
                                                                                                                  
-by Alimt36 
+by [Alimt36](https://github.com/Alimt36) 
