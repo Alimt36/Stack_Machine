@@ -1,5 +1,5 @@
 ## Repository Structure
-The repository is divided into 2 main parts, Hardware and Software. The following tree shows the file structure of the repository and then the parts will be explained separately.
+The repository is divided into 2 main parts, Hardware and Software , which they both have 2 different versions.  The following tree shows the file structure of the repository and then the parts will be explained separately.
 ```
 Stack_Machine/
 ├── source_code/            
@@ -56,6 +56,7 @@ Stack_Machine/
 │
 └── README.md
 ```
+Both parts have 2 different versions , for hardare one version is the untouched version of the cpu that is explained just below and the other is the modified version that i wrote and will be explained later. The Software part has two plus versions , one is the compiler/assembler that the source provides , and two other version that i wrote and again will be explained in the next paragraphs.  
 ---
 ## Hardware Part:
 ### TINYCPU: A Stack Machine - A 16-bit Stack-Based Processor
@@ -81,13 +82,13 @@ In one word: Every operation is a stack operation!
 ```python
 "HALT": "0000000000000000",
 
-"PUSHI": "0001",  # 0001iiiiiiiiiiii
-"PUSH" : "0010",  # 0010aaaaaaaaaaaa
-"POP"  : "0011",  # 0011aaaaaaaaaaaa
+"PUSHI": "0001",  # 0001 (immidiate)
+"PUSH" : "0010",  # 0010 ( address )
+"POP"  : "0011",  # 0011 ( address )
 
-"JMP"  : "0100",  # 0100aaaaaaaaaaaa
-"JZ"   : "0101",  # 0101aaaaaaaaaaaa
-"JNZ"  : "0110",  # 0110aaaaaaaaaaaa
+"JMP"  : "0100",  # 0100 ( address )
+"JZ"   : "0101",  # 0101 ( address )
+"JNZ"  : "0110",  # 0110 ( address )
 
 "IN"   : "1101000000000000",
 "OUT"  : "1110000000000000",
@@ -151,9 +152,100 @@ Some_Array[9] = Some_Array[0] + x ;
 
 halt;
 ```
+## Modified Version:
+this version is what i did with the basic Stack_Machine. I changed some of the ISA inorder to able to use indirect addressing. this option is the basic need for CPUs to have the ability to support full array operations. The base CPU can't handle indirect addressing because the 5 stage 5-state fetch-decode-execute cycle is not enough for both handling the dynamic address and reading words from the memory , so i added one more state to the execution cycle , which is called `EXEXCC` and is only used in case of `PUSH_IND` and `POP_IND`. For supporting this change some modules needed some changes and for ease of use i put all the codes in the folder.
+**Modified Instruction Set**
+The Instruction Set that mentioned before pluss these two.
+```python
+"PUSH_IND" : "0111",  # 0111( array base address )
+"POP_IND"  : "1000" , # 1000( array base address )
+```
+I also modified the base python toolchain that i had written earlier to support the arrays and indirect addressing. but there are some things about what it does and what does not support that i will point later.
+**Modified Stack_Machine's Execution Cycle State Machine**
+<!-- ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍![CPU's State Machine]() -->
+```
+                            ┌──────────┐
+                     ┌─────►│   IDLE   │ (000)
+                     │      │ (reset)  │
+                     │      └────┬─────┘
+                     │           │
+                     │      run=1│
+                     │           │
+                     │           ▼
+                     │      ┌──────────┐
+                     │      │          │ (001)
+                     │      │  FETCHA  │                                   
+                     │      │          │<────────────────────────────┐          
+                     │      └────┬─────┘                             |                
+                     │           │                                   |                
+                     │    always │                                   |      
+                     │           │                                   |      
+                     │           ▼                                   |                     
+                     │      ┌──────────┐                             |                          
+                     │      │          │ (010)                       |                     
+                     │<─────│  FETCHB  │                             |                
+                     │      │          │                             |                          
+                     │      └────┬─────┘                             |                     
+                     │           │                                   |                          
+                     │    always │                                   |           
+                     │           │                                   |                
+                     │           ▼                                   |                
+                     │      ┌──────────┐                             |     
+               halt=1│      │  EXECA   │ (011)                       |                     
+                     │      │          │             cont=0          |           
+                     │      │ Decode   │─────────────────────────────|      
+                     |<─────┤ Execute  │                             |                          
+                     |      └────┬─────┘                             |           
+                     |           │                                   |                          
+                     |    cont=0 │                                   |
+                     |           └────────────┐                      |
+                     |                        │ cont=1               |
+                     |                        │                      |
+                     |                        │                      |
+                     |                        ▼                      |
+                     |                   ┌──────────┐                |
+                     |                   │  EXECB   │ (100)          |
+                     |                   │          │       cont=0   |
+                     |                   │ PUSH: RAM│────────────────┘
+                     |             cont=0│ *_IND:   │                |      
+                     |                   │  ind2abus│                |      
+                     |                   └────┬─────┘                |      
+                     |                        │                      |      
+                     |                        │ cont=1               |      
+                     |                        │ (PUSH_IND only)      |      
+                     |                        │                      |      
+                     |                        ▼                      |      
+                     |                   ┌──────────┐                |      
+                     |                   │  EXECC   │ (101)          |      
+                     |                   │          │                |      
+                     └───────────────────│ PUSH_IND:│                |      
+                                         │ ram2dbus │                |      
+                                         │ push     │                |      
+                                         └────┬─────┘                |      
+                                              │                      |      
+                                              │ always               |      
+                                              │                      |      
+                                              └──────────────────────┘             
+```
+
+**Additional Pints on C-like Language**
+- In every line and statement the compiler supports only one array usage. 
+- out cannot handle arrays. if want to out array value swap value with a variable.
+```c
+int x = 64 ;
+int Some_Array[36] ;
+int i ;
+
+x = Some_Array[1] ;
+Some_Array[2] = x ;
+
+while ( i < 36 ) { x = A[i] ; out( x ) ; i = i + 1 ; }
+
+```
 ---
 ## Usage Flow:
-1. Write the code in C-like language
+no matter what version you use , 
+1. Write the code in C-like language inside the file `TINYCPU_code.c` 
 2. Use the Python toolchain to get memory initialization lines for the CPU
 3. Add the memory initialization lines to the `ram.v` module
 4. Implement the CPU on an FPGA
