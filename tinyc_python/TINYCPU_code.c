@@ -33,5 +33,5 @@ while ( i <= 10 ) { if ( x == 36 ) { out( 1 ) ; i = i + 1 ; } else { out( 0 ) ; 
 // while ( i < 3 ) { i = i ; i = i + 1 ; }
 
 // // out(y);
-// halt;
+halt;
 

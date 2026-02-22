@@ -27,7 +27,7 @@ Stack_Machine/
 |   ├── generated_0and1s.txt
 |   └── generated_mac2mem.txt
 |
-├──Modified_Version/       # Modified version folder 
+├──Modified_Version/       # Modified version of the hardware and software
 |   ├──Modified_Stack_Machine/
 │   |    ├──tinycpu.v
 │   |    ├──alu.v 
@@ -128,7 +128,162 @@ The source code provides a toolchain that can compile and assemble from a C-like
 - **TINYCPU_mac2mem_in_python.py:** Gets the binary code and converts it to Verilog memory initialization format
 - **TINYCPU_toolchain_controler.py:** Connects all 3 codes above for ease of use; only needs the path of the C-like code and does everything needed
 
-![compiler-assembler in python](tinyc_python/py_code_pic_for_readme.png)
+<!-- ![compiler-assembler in python](tinyc_python/py_code_pic_for_readme.png) -->
+```
+----------------------------------------------------------------------------------------------------
+int x = 36 ;
+int A[3] ;
+int y ;
+int i ;
+int input = in ;
+
+A[3] = x + A[1] ;
+A[1] = in ;
+
+while ( i <= 10 ) { if ( x == 36 ) { out( 1 ) ; i = i + 1 ; } else { out( 0 ) ; } }
+halt;
+----------------------------------------------------------------------------------------------------
+PUSHI 36
+POP x
+PUSHI 0
+POP A0
+PUSHI 0
+POP A1
+PUSHI 0
+POP A2
+PUSHI 0
+POP y
+PUSHI 0
+POP i
+IN
+POP input
+PUSH x
+PUSH A1
+ADD
+POP A3
+IN
+POP A1
+_001T:
+PUSH i
+PUSHI 10
+LE
+JZ _001F
+PUSH x
+PUSHI 36
+EQ
+JZ _002F
+PUSHI 1
+OUT
+PUSH i
+PUSHI 1
+ADD
+POP i
+JMP _002T
+_002F:
+PUSHI 0
+OUT
+_002T:
+JMP _001T
+_001F:
+HALT
+----------------------------------------------------------------------------------------------------
+0001000000100100
+0011000000100111
+0001000000000000
+0011000000101000
+0001000000000000
+0011000000101001
+0001000000000000
+0011000000101010
+0001000000000000
+0011000000101011
+0001000000000000
+0011000000101100
+1101000000000000
+0011000000101101
+0010000000100111
+0010000000101001
+1111000000000000
+0011000000101110
+1101000000000000
+0011000000101001
+0010000000101100
+0001000000001010
+1111000000001101
+0101000000100110
+0010000000100111
+0001000000100100
+1111000000001010
+0101000000100011
+0001000000000001
+1110000000000000
+0010000000101100
+0001000000000001
+1111000000000000
+0011000000101100
+0100000000100101
+0001000000000000
+1110000000000000
+0100000000010100
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+----------------------------------------------------------------------------------------------------
+mem[12'b000000000000] = 16'b0001000000100100 ;
+mem[12'b000000000001] = 16'b0011000000100111 ;
+mem[12'b000000000010] = 16'b0001000000000000 ;
+mem[12'b000000000011] = 16'b0011000000101000 ;
+mem[12'b000000000100] = 16'b0001000000000000 ;
+mem[12'b000000000101] = 16'b0011000000101001 ;
+mem[12'b000000000110] = 16'b0001000000000000 ;
+mem[12'b000000000111] = 16'b0011000000101010 ;
+mem[12'b000000001000] = 16'b0001000000000000 ;
+mem[12'b000000001001] = 16'b0011000000101011 ;
+mem[12'b000000001010] = 16'b0001000000000000 ;
+mem[12'b000000001011] = 16'b0011000000101100 ;
+mem[12'b000000001100] = 16'b1101000000000000 ;
+mem[12'b000000001101] = 16'b0011000000101101 ;
+mem[12'b000000001110] = 16'b0010000000100111 ;
+mem[12'b000000001111] = 16'b0010000000101001 ;
+mem[12'b000000010000] = 16'b1111000000000000 ;
+mem[12'b000000010001] = 16'b0011000000101110 ;
+mem[12'b000000010010] = 16'b1101000000000000 ;
+mem[12'b000000010011] = 16'b0011000000101001 ;
+mem[12'b000000010100] = 16'b0010000000101100 ;
+mem[12'b000000010101] = 16'b0001000000001010 ;
+mem[12'b000000010110] = 16'b1111000000001101 ;
+mem[12'b000000010111] = 16'b0101000000100110 ;
+mem[12'b000000011000] = 16'b0010000000100111 ;
+mem[12'b000000011001] = 16'b0001000000100100 ;
+mem[12'b000000011010] = 16'b1111000000001010 ;
+mem[12'b000000011011] = 16'b0101000000100011 ;
+mem[12'b000000011100] = 16'b0001000000000001 ;
+mem[12'b000000011101] = 16'b1110000000000000 ;
+mem[12'b000000011110] = 16'b0010000000101100 ;
+mem[12'b000000011111] = 16'b0001000000000001 ;
+mem[12'b000000100000] = 16'b1111000000000000 ;
+mem[12'b000000100001] = 16'b0011000000101100 ;
+mem[12'b000000100010] = 16'b0100000000100101 ;
+mem[12'b000000100011] = 16'b0001000000000000 ;
+mem[12'b000000100100] = 16'b1110000000000000 ;
+mem[12'b000000100101] = 16'b0100000000010100 ;
+mem[12'b000000100110] = 16'b0000000000000000 ;
+mem[12'b000000100111] = 16'b0000000000000000 ;
+mem[12'b000000101000] = 16'b0000000000000000 ;
+mem[12'b000000101001] = 16'b0000000000000000 ;
+mem[12'b000000101010] = 16'b0000000000000000 ;
+mem[12'b000000101011] = 16'b0000000000000000 ;
+mem[12'b000000101100] = 16'b0000000000000000 ;
+mem[12'b000000101101] = 16'b0000000000000000 ;
+mem[12'b000000101110] = 16'b0000000000000000 ;
+----------------------------------------------------------------------------------------------------
+```
 
 **The C-like language:**
 
@@ -156,7 +311,7 @@ Some_Array[9] = Some_Array[0] + x ;
 halt;
 ```
 ## Modified Version:
-this version is what i did with the basic Stack_Machine. I changed some of the ISA in order to able to use indirect addressing. this option is the basic need for CPUs to have the ability to support full array operations. The base CPU can't handle indirect addressing because the 5 stage 5-state fetch-decode-execute cycle is not enough for both handling the dynamic address and reading words from the memory ,basically FPGAs need at least 2 cycle for reading and writing to the RAMs that they have and for the indirect part we need one more cycle to first generate the indirect address and then do the memory operation , so i added one more state to the execution cycle , which is called `EXEXCC` and is only used in case of `PUSH_IND` and `POP_IND`. For supporting this change some modules needed some changes and for ease of use i put all the codes in the folder.
+this version is what i did with the basic Stack_Machine. I changed some of the ISA in order to able to use indirect addressing. this option is the basic need for CPUs to have the ability to support full array operations. The base CPU can't handle indirect addressing because the 5 stage 5-state fetch-decode-execute cycle is not enough for both handling the dynamic address and reading words from the memory ,basically FPGAs need at least 2 cycles for reading and writing to the RAMs that they have and for the indirect part we need one more cycle to first generate the indirect address and then do the memory operation , so i added one more state to the execution cycle , which is called `EXEXCC` and is only used in case of `PUSH_IND` and `POP_IND`. For supporting this change some modules needed some changes and for ease of use i put all the codes in the folder.
 **Modified Instruction Set**
 The Instruction Set that mentioned before plus these two.
 ```python
