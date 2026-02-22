@@ -56,7 +56,9 @@ Stack_Machine/
 │
 └── README.md
 ```
+
 Both parts have 2 different versions , for hardare one version is the untouched version of the cpu that is explained just below and the other is the modified version that i wrote and will be explained later. The Software part has two plus versions , one is the compiler/assembler that the source provides , and two other version that i wrote and again will be explained in the next paragraphs.  
+
 ---
 ## Hardware Part:
 ### TINYCPU: A Stack Machine - A 16-bit Stack-Based Processor
@@ -154,7 +156,7 @@ Some_Array[9] = Some_Array[0] + x ;
 halt;
 ```
 ## Modified Version:
-this version is what i did with the basic Stack_Machine. I changed some of the ISA inorder to able to use indirect addressing. this option is the basic need for CPUs to have the ability to support full array operations. The base CPU can't handle indirect addressing because the 5 stage 5-state fetch-decode-execute cycle is not enough for both handling the dynamic address and reading words from the memory , so i added one more state to the execution cycle , which is called `EXEXCC` and is only used in case of `PUSH_IND` and `POP_IND`. For supporting this change some modules needed some changes and for ease of use i put all the codes in the folder.
+this version is what i did with the basic Stack_Machine. I changed some of the ISA inorder to able to use indirect addressing. this option is the basic need for CPUs to have the ability to support full array operations. The base CPU can't handle indirect addressing because the 5 stage 5-state fetch-decode-execute cycle is not enough for both handling the dynamic address and reading words from the memory ,basicaly FPGAs need at least 2 cycle for reading and writing to the RAMs that they have and for the indirect part we need one more cycle to first generate the indirect address and then do the memory operation , so i added one more state to the execution cycle , which is called `EXEXCC` and is only used in case of `PUSH_IND` and `POP_IND`. For supporting this change some modules needed some changes and for ease of use i put all the codes in the folder.
 **Modified Instruction Set**
 The Instruction Set that mentioned before pluss these two.
 ```python
