@@ -50,14 +50,14 @@ Stack_Machine/
 |        ├── generated_0and1s.txt
 |        └── generated_mac2mem.txt
 |
-├── pdf_s/                 # docs relatd to the cpu and software
+├── pdf_s/                 # docs related to the cpu and software
 │   ├── ...
 │   └── ...
 │
 └── README.md
 ```
 
-Both parts have 2 different versions , for hardare one version is the untouched version of the cpu that is explained just below and the other is the modified version that i wrote and will be explained later. The Software part has two plus versions , one is the compiler/assembler that the source provides , and two other version that i wrote and again will be explained in the next paragraphs.  
+Both parts have 2 different versions , for hardware one version is the untouched version of the cpu that is explained just below and the other is the modified version that i wrote and will be explained later. The Software part has two plus versions , one is the compiler/assembler that the source provides , and two other version that i wrote and again will be explained in the next paragraphs.  
 
 ---
 ## Hardware Part:
@@ -84,7 +84,7 @@ In one word: Every operation is a stack operation!
 ```python
 "HALT": "0000000000000000",
 
-"PUSHI": "0001",  # 0001 (immidiate)
+"PUSHI": "0001",  # 0001 (immediate)
 "PUSH" : "0010",  # 0010 ( address )
 "POP"  : "0011",  # 0011 ( address )
 
@@ -134,7 +134,7 @@ The source code provides a toolchain that can compile and assemble from a C-like
 
 The C-like language that the compiler accepts has the following rules:
 - Variable definition: only one per line
-- Array support : supports only consistant indexing because of hardware limitations! and doesn't handle initialization by value  
+- Array support : supports only consistent indexing because of hardware limitations! and doesn't handle initialization by value  
 - Math operations: only one per line and must be in the format `{operand0 operation operand1}`
 - If-else and while: supported but must be written in one line
 - Characters of different purposes are better separated by spaces
@@ -156,9 +156,9 @@ Some_Array[9] = Some_Array[0] + x ;
 halt;
 ```
 ## Modified Version:
-this version is what i did with the basic Stack_Machine. I changed some of the ISA inorder to able to use indirect addressing. this option is the basic need for CPUs to have the ability to support full array operations. The base CPU can't handle indirect addressing because the 5 stage 5-state fetch-decode-execute cycle is not enough for both handling the dynamic address and reading words from the memory ,basicaly FPGAs need at least 2 cycle for reading and writing to the RAMs that they have and for the indirect part we need one more cycle to first generate the indirect address and then do the memory operation , so i added one more state to the execution cycle , which is called `EXEXCC` and is only used in case of `PUSH_IND` and `POP_IND`. For supporting this change some modules needed some changes and for ease of use i put all the codes in the folder.
+this version is what i did with the basic Stack_Machine. I changed some of the ISA in order to able to use indirect addressing. this option is the basic need for CPUs to have the ability to support full array operations. The base CPU can't handle indirect addressing because the 5 stage 5-state fetch-decode-execute cycle is not enough for both handling the dynamic address and reading words from the memory ,basically FPGAs need at least 2 cycle for reading and writing to the RAMs that they have and for the indirect part we need one more cycle to first generate the indirect address and then do the memory operation , so i added one more state to the execution cycle , which is called `EXEXCC` and is only used in case of `PUSH_IND` and `POP_IND`. For supporting this change some modules needed some changes and for ease of use i put all the codes in the folder.
 **Modified Instruction Set**
-The Instruction Set that mentioned before pluss these two.
+The Instruction Set that mentioned before plus these two.
 ```python
 "PUSH_IND" : "0111",  # 0111( array base address )
 "POP_IND"  : "1000" , # 1000( array base address )
