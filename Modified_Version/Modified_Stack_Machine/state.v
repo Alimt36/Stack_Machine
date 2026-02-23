@@ -24,3 +24,4 @@ module state(clk,reset,run,cont,halt,cs);
       endcase
 
 endmodule
+
