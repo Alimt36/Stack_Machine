@@ -35,7 +35,7 @@ def load_file () -> str :
 def save_assembly_to_file( path , assembly_list) : 
     file_source = path
     folder_path = os.path.dirname(file_source)
-    assebly_output_file_path = os.path.join(folder_path , "generated_assebly.txt" )
+    assebly_output_file_path = os.path.join(folder_path , "generated_assembly.txt" )
 
     try : 
         with open(assebly_output_file_path, "w") as f:

@@ -109,18 +109,57 @@ def label( line ) :
 #---------------------------------------------------------------------------------------------------------------------------
 # to_binary functions : 
 #   they get a number and turn it into binary regarding the format they are written to
+#
+#   negative numbers get handeled in 2's compliment!
 #---------------------------------------------------------------------------------------------------------------------------
 def int_2_binary_12bit ( labelnum ) : 
     temp = bin(labelnum)[2:]
     temp_0s = '0' * (12-len(temp)) 
     temp_str = f"{temp_0s}{temp}"
 
+    if labelnum < 0 : 
+        # count_1 = 0
+        # for i in range ( 0 , len(temp_str) ) :
+        #     if count_1 > 0 :
+        #         if temp_str[i] == "0" :
+        #             temp_str[i] = "1"
+        #         else : temp_str[i] = "0"
+        #     else : 
+        #         # pass
+        #         if temp_str[i] == "1":
+        #             count_1 += 1
+        # return temp_str
+        temp_str = format(labelnum & 0xFFF, '012b')
+    else : 
+        # return temp_str
+        # return '0' * 12
+        # return "LOL"
+        pass
     return temp_str
 
 def int_2_binary_16bit ( x ) : 
     temp = bin(x)[2:]
     temp_0s = '0' * (16-len(temp)) 
     temp_str = f"{temp_0s}{temp}"
+
+    if x < 0 : 
+        # count_1 = 0
+        # for i in range ( 0 , len(temp_str) ) :
+        #     if count_1 > 0 :
+        #         if temp_str[i] == "0" :
+        #             temp_str[i] = "1"
+        #         else : temp_str[i] = "0"
+        #     else : 
+        #         # pass
+        #         if temp_str[i] == "1":
+        #             count_1 += 1
+        temp_str = format(x & 0xFFF, '012b')
+        return temp_str
+    else : 
+        # return temp_str
+        # return '0' * 12
+        # return "LOL"
+        pass
 
     return temp_str
 #---------------------------------------------------------------------------------------------------------------------------

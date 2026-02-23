@@ -106,18 +106,30 @@ def label( line ) :
 #---------------------------------------------------------------------------------------------------------------------------
 # to_binary functions : 
 #   they get a number and turn it into binary regarding the format they are written to
+#
+#   negative numbers get handeled in 2's compliment!
 #---------------------------------------------------------------------------------------------------------------------------
 def int_2_binary_12bit ( labelnum ) : 
     temp = bin(labelnum)[2:]
     temp_0s = '0' * (12-len(temp)) 
     temp_str = f"{temp_0s}{temp}"
 
+    if labelnum < 0 : 
+        temp_str = format(labelnum & 0xFFF, '012b')
+    else : 
+        pass
     return temp_str
 
 def int_2_binary_16bit ( x ) : 
     temp = bin(x)[2:]
     temp_0s = '0' * (16-len(temp)) 
     temp_str = f"{temp_0s}{temp}"
+
+    if x < 0 : 
+        temp_str = format(x & 0xFFF, '012b')
+        return temp_str
+    else : 
+        pass
 
     return temp_str
 #---------------------------------------------------------------------------------------------------------------------------

@@ -70,7 +70,7 @@ def main():
             time.sleep(2)
             return
     
-    assembly_path = os.path.join(folder, "generated_assebly.txt")
+    assembly_path = os.path.join(folder, "generated_assembly.txt")
     binary_path = os.path.join(folder, "generated_0and1s.txt")
     verilog_path = os.path.join(folder, "generated_mac2mem.txt")
     

@@ -79,6 +79,7 @@ In one word: Every operation is a stack operation!
 - **ALU Operations:** 19 operations including arithmetic, logical, bitwise, and comparison
 - **Instruction Set:** 12 instruction types
 - **State Machine:** 5-state fetch-decode-execute cycle
+- **Number System:** 12-bit 2's compliment (range(-2048 to 2047)) 
 
 **Instruction Set:**
 ```python
@@ -305,7 +306,7 @@ int i ;
 x = Some_Array[1] ;
 Some_Array[2] = x ;
 
-while ( i < 36 ) { x = A[i] ; out( x ) ; i = i + 1 ; }
+while ( i < 36 ) { x = Some_Array[i] ; out( x ) ; i = i + 1 ; }
 
 halt;
 ```
